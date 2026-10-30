@@ -1,20 +1,23 @@
 # WebAssembly platform
 
-The browser target is built independently from the Nintendo DS build.
+The browser target is built independently from the Nintendo DS build. The original root `build.zig` is unchanged and remains dedicated to the DS project.
 
-## Build
+## Build with C++
 
-From the repository root, using a Zig compiler compatible with the project's build API:
+Requirements: CMake 3.20+, Clang++ with the `wasm32-unknown-unknown` target, and wasm-ld.
+
+From the repository root:
 
 ```sh
-zig build --build-file buildweb.zig
+cmake -S platforms/web -B build/web
+cmake --build build/web
 ```
 
-The build file targets `wasm32-freestanding` and installs `nsmb-web.wasm` under `zig-out/bin/`. Copy that artifact to `web/nsmb-web.wasm` for the static browser page. The page instantiates it without WASI imports, checks ABI version 1, and calls the exported initialization/update functions.
+The build writes `web/nsmb-web.wasm` directly. The browser page loads this file, validates ABI version 1, and calls the exported initialization/update functions.
 
 ## Current ABI scaffold
 
-`wasm_entry.zig` exports:
+`wasm_entry.cpp` exports:
 
 - `nsmb_web_abi_version() -> u32`
 - `nsmb_web_init() -> u32`

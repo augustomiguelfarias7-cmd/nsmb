@@ -4,15 +4,18 @@ This folder contains the browser-facing page and input layer for the experimenta
 
 ## Build the WebAssembly module
 
-The separate Zig build file leaves the original Nintendo DS build untouched. From the repository root, with a compatible Zig compiler installed, run:
+The browser target uses a separate C++/Clang build and leaves the original Nintendo DS `build.zig` untouched. Requirements: CMake 3.20+, Clang++ with the `wasm32-unknown-unknown` target, and wasm-ld.
+
+From the repository root:
 
 ```sh
-zig build --build-file buildweb.zig
+cmake -S platforms/web -B build/web
+cmake --build build/web
 ```
 
-The expected output is `zig-out/bin/nsmb-web.wasm`. Copy that artifact to `web/nsmb-web.wasm` before serving or publishing the page. The page attempts to load `./nsmb-web.wasm`, validates ABI version 1, calls `nsmb_web_init()`, and sends frame updates through `nsmb_web_update(delta_ms, input_bits)`.
+The build writes `web/nsmb-web.wasm`. The page loads it, validates ABI version 1, calls `nsmb_web_init()`, and sends frame updates through `nsmb_web_update(delta_ms, input_bits)`.
 
-The current Zig entry point is deliberately a no-op ABI scaffold. A successfully loaded module proves that the browser can instantiate the WASM artifact and call its exports; it does not mean the original game is playable.
+The current C++ entry point is deliberately a no-op ABI scaffold. A successfully loaded module proves that the browser can instantiate the WASM artifact and call its exports; it does not mean the original game is playable.
 
 ## Browser controls
 
