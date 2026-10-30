@@ -8,7 +8,7 @@ An initial browser-facing scaffold is available in [web/](web/). It provides a r
 
 **This is not yet a playable browser build.** The original decompilation still requires its own build process and game-runtime integration. The web scaffold currently contains no ROM, extracted game assets, music, or original game levels.
 
-The browser WebAssembly scaffold is built separately with C++ and Clang. See [web/README.md](web/README.md) for build instructions and the current input map. The original root `build.zig` remains dedicated to the Nintendo DS build and is not modified by the browser build.
+See [web/README.md](web/README.md) for the current input map and integration notes.
 
 # Supported releases
 
@@ -30,10 +30,10 @@ The browser WebAssembly scaffold is built separately with C++ and Clang. See [we
 [^3]: This build uses a 2.0 version of the mwcc compiler
 <!--
 This build is identical to A85P above but it also includes a autoboot flag
-| [x168 - New Super Mario Bros. (Europe) (En,Fr,De,Es,It) (Demo, Kiosk, Y78P)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=x168) | A85P         | None        | 2006-04-27 11:13:34 |
+| [x168 - New Super Mario Bros. (Europe) (En,Fr,De,Es,It) (Demo) (Kiosk, Y78P)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=x168) | A85P         | None        | 2006-04-27 11:13:34 |
 
 These Wii U Virtual console releases seem to be idential to the builds above, however they have some extra data in the range 0x1000-0x3FFF.
 | [z434 - New Super Mario Bros. (Japan) (Wii U Virtual Console)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=z434)                   | WUP-N-DADJ   | None        | 2006-04-04 19:07:45 |
 | [z435 - New Super Mario Bros. (USA) (Wii U Virtual Console)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=z435) | WUP-N-DADE   | None        | 2006-03-29 09:48:19 |
-| [z436 - New Super Mario Bros. (Europe) (En,Fr,De,Es,It) (Wii U Virtual Console)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=z436) | WUP-N-DADP   | None        | 2006-04-26 14:20:08 |
+| [z436 - New Super Mario Bros. (Europe) (Wii U Virtual Console)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=z436) | WUP-N-DADP   | None        | 2006-04-26 14:20:08 |
 -->
