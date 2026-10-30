@@ -1,6 +1,14 @@
 > [!CAUTION]
-> This project is currently in early stages and is unable to be compiled into a full rom at this time  
+> This project is currently in early stages and is unable to be compiled into a full rom at this time
 > If you would like to help develop this project read [contributing.md](contributing.md)
+
+# Browser port (experimental)
+
+An initial browser-facing scaffold is available in [web/](web/). It provides a responsive viewport, fullscreen support, best-effort landscape orientation locking, touch controls, and keyboard input.
+
+**This is not yet a playable browser build.** The original decompilation still requires its own build process and game-runtime integration. The web scaffold currently contains no ROM, extracted game assets, music, or original game levels.
+
+See [web/README.md](web/README.md) for the current input map and integration notes.
 
 # Supported releases
 
@@ -21,7 +29,7 @@
 [^2]: This NSMB ROM has the same Product Code as the standard JP demo, so "_1" is appended here
 [^3]: This build uses a 2.0 version of the mwcc compiler
 <!--
-This build is identical to A85P above but it also includes a autoboot flag 
+This build is identical to A85P above but it also includes a autoboot flag
 | [x168 - New Super Mario Bros. (Europe) (En,Fr,De,Es,It) (Demo) (Kiosk, Y78P)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=x168) | A85P         | None        | 2006-04-27 11:13:34 |
 
 These Wii U Virtual console releases seem to be idential to the builds above, however they have some extra data in the range 0x1000-0x3FFF.
