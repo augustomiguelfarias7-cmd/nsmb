@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="Base experimental de navegador para o projeto de port de New Super Mario Bros.">
+  <title>NSMB Web Port · Development Preview</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">NS</span>
+        <div><strong>NSMB Web Port</strong><small>DESENVOLVIMENTO EXPERIMENTAL</small></div>
+      </div>
+      <div class="top-actions">
+        <span class="status" id="status">PORT EM PREPARAÇÃO</span>
+        <button class="icon-button" id="fullscreenButton" type="button" aria-label="Ativar tela cheia" title="Tela cheia">⛶</button>
+      </div>
+    </header>
+
+    <section class="game-layout" aria-label="Área de jogo">
+      <div class="screen-frame">
+        <canvas id="gameCanvas" width="960" height="540" aria-label="Prévia visual do ambiente de jogo"></canvas>
+        <div class="screen-overlay">
+          <span class="eyebrow">ETAPA 01 · FUNDAÇÃO WEB</span>
+          <h1>Ambiente de jogo</h1>
+          <p>O motor e os dados das fases ainda não estão conectados.</p>
+          <span class="screen-hint">Use o teclado ou os controles virtuais para testar as entradas.</span>
+        </div>
+      </div>
+      <div class="mobile-controls" id="mobileControls" aria-label="Controles virtuais">
+        <div class="left-controls">
+          <div class="stick-area" id="stickArea" aria-label="Analógico virtual">
+            <div class="stick-base"><div class="stick-knob" id="stickKnob"></div></div>
+          </div>
+          <div class="shoulder-buttons">
+            <button class="control-button shoulder" data-control="l" type="button">L</button>
+            <button class="control-button shoulder" data-control="r" type="button">R</button>
+          </div>
+        </div>
+        <div class="right-controls">
+          <div class="face-buttons">
+            <button class="control-button face x" data-control="fire" type="button">X</button>
+            <button class="control-button face y" data-control="run" type="button">Y</button>
+            <button class="control-button face b" data-control="jump" type="button">B</button>
+            <button class="control-button face a" data-control="jump" type="button">A</button>
+          </div>
+          <button class="control-button confirm" data-control="confirm" type="button">START</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>PC: setas / WASD · Espaço: pular · Shift: correr · X: ação · Q/E: L/R · Enter: confirmar</span>
+      <span id="inputReadout">ENTRADA: NEUTRA</span>
+    </footer>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>
