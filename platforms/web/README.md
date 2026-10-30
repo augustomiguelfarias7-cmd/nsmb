@@ -1,37 +1,27 @@
 # WebAssembly platform
 
-The browser target is built independently from the Nintendo DS build. The original root `build.zig` is unchanged and remains dedicated to the DS project.
+The browser target is built independently from the Nintendo DS build. The original root `build.zig` remains unchanged.
 
-## Build with C++
+## Build
 
 Requirements: CMake 3.20+, Clang++ with the `wasm32-unknown-unknown` target, and wasm-ld.
-
-From the repository root:
 
 ```sh
 cmake -S platforms/web -B build/web
 cmake --build build/web
 ```
 
-The build writes `web/nsmb-web.wasm` directly. The browser page loads this file, validates ABI version 1, and calls the exported initialization/update functions.
+The build writes `web/nsmb-web.wasm`.
 
-## Current ABI scaffold
+## Engine foundation (ABI 2)
 
-`wasm_entry.cpp` exports:
+The freestanding C++ engine in `engine.cpp` currently implements a small original platform-game test level:
+- fixed-step-safe frame delta clamping and player movement;
+- gravity, jump edge detection, ground and platform landing collisions;
+- run speed, facing direction, and camera following;
+- seven collectible coins, score, goal detection, and restart;
+- exported player/camera/score state consumed by the browser renderer.
 
-- `nsmb_web_abi_version() -> u32`
-- `nsmb_web_init() -> u32`
-- `nsmb_web_update(delta_ms: f32, input_bits: u32) -> void`
-- `nsmb_web_shutdown() -> void`
+The browser host in `web/app.js` supplies keyboard and touch input, renders the engine state on Canvas, and displays the HUD. This is a playable engine integration test, not yet the reconstructed New Super Mario Bros. game. The existing DS decompilation still needs a separate integration pass; DS-specific hardware and OS dependencies must not be pulled into the shared browser runtime blindly.
 
-These are no-op exports used to establish the build and browser-loading boundary. They do not implement the game or render gameplay.
-
-## Host responsibilities
-
-- Connect browser keyboard and touch input to the shared game input interface.
-- Provide the browser-facing rendering surface and frame loop.
-- Handle audio through browser-supported APIs.
-- Provide controlled asset loading for original or properly licensed project assets.
-- Keep browser-specific code outside `src/shared/`.
-
-Do not assume WASI is available in GitHub Pages' browser runtime. Do not move reconstructed DS code into the shared layer until its hardware and operating-system dependencies have been identified and replaced.
+No ROM, extracted game assets, music, or original game levels are included. The test level uses original procedural graphics.
