@@ -3,6 +3,7 @@
   const ctx = canvas.getContext("2d");
   const readout = document.getElementById("inputReadout");
   const fullscreenButton = document.getElementById("fullscreenButton");
+  const status = document.getElementById("status");
   const controls = new Set();
   const keys = new Map([
     ["ArrowLeft", "left"], ["a", "left"], ["A", "left"],
@@ -12,30 +13,30 @@
     [" ", "jump"], ["Shift", "run"], ["x", "fire"], ["X", "fire"],
     ["Enter", "confirm"], ["q", "l"], ["Q", "l"], ["e", "r"], ["E", "r"]
   ]);
-
+  const inputOrder = ["left", "right", "up", "down", "jump", "run", "fire", "confirm", "l", "r"];
   let stickPointer = null;
   let stickVector = { x: 0, y: 0 };
+  let wasmExports = null;
+  let previousFrame = 0;
+
+  function inputMask() {
+    return inputOrder.reduce((mask, key, bit) => mask | (controls.has(key) ? (1 << bit) : 0), 0) >>> 0;
+  }
 
   function publishInput() {
     const active = [...controls];
-    const labels = active.length ? active.map(v => v.toUpperCase()).join(" + ") : "NEUTRA";
-    readout.textContent = "ENTRADA: " + labels;
+    readout.textContent = "ENTRADA: " + (active.length ? active.map(v => v.toUpperCase()).join(" + ") : "NEUTRA");
     window.dispatchEvent(new CustomEvent("nsmb-input", {
       detail: {
-        pressed: Object.fromEntries(["left","right","up","down","jump","run","fire","confirm","l","r"].map(k => [k, controls.has(k)])),
-        analog: { ...stickVector }
+        pressed: Object.fromEntries(inputOrder.map(k => [k, controls.has(k)])),
+        analog: { ...stickVector },
+        bitmask: inputMask()
       }
     }));
   }
 
-  function press(control) {
-    controls.add(control);
-    publishInput();
-  }
-  function release(control) {
-    controls.delete(control);
-    publishInput();
-  }
+  function press(control) { controls.add(control); publishInput(); }
+  function release(control) { controls.delete(control); publishInput(); }
 
   window.addEventListener("keydown", event => {
     const control = keys.get(event.key);
@@ -59,14 +60,12 @@
     const down = event => { event.preventDefault(); button.classList.add("pressed"); press(control); };
     const up = event => { event.preventDefault(); button.classList.remove("pressed"); release(control); };
     button.addEventListener("pointerdown", down);
-    ["pointerup","pointercancel","pointerleave"].forEach(name => button.addEventListener(name, up));
+    ["pointerup", "pointercancel", "pointerleave"].forEach(name => button.addEventListener(name, up));
   });
 
   const stickArea = document.getElementById("stickArea");
   const stickKnob = document.getElementById("stickKnob");
-  function resetStick() {
-    stickKnob.style.transform = "translate(0px, 0px)";
-  }
+  function resetStick() { stickKnob.style.transform = "translate(0px, 0px)"; }
   function moveStick(event) {
     const rect = stickArea.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -78,7 +77,7 @@
     if (length > max) { dx = dx / length * max; dy = dy / length * max; }
     stickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
     stickVector = { x: Math.max(-1, Math.min(1, dx / max)), y: Math.max(-1, Math.min(1, -dy / max)) };
-    ["left","right","up","down"].forEach(k => controls.delete(k));
+    ["left", "right", "up", "down"].forEach(k => controls.delete(k));
     if (stickVector.x < -.28) controls.add("left");
     if (stickVector.x > .28) controls.add("right");
     if (stickVector.y > .35) controls.add("up");
@@ -98,7 +97,7 @@
     if (event.pointerId !== stickPointer) return;
     stickPointer = null;
     stickVector = { x: 0, y: 0 };
-    ["left","right","up","down"].forEach(k => controls.delete(k));
+    ["left", "right", "up", "down"].forEach(k => controls.delete(k));
     resetStick();
     publishInput();
   }
@@ -110,13 +109,13 @@
       if (!document.fullscreenElement) {
         await document.documentElement.requestFullscreen();
         if (screen.orientation && screen.orientation.lock) {
-          try { await screen.orientation.lock("landscape"); } catch (_) { /* Device/browser may not allow orientation locking. */ }
+          try { await screen.orientation.lock("landscape"); } catch (_) { /* Optional browser capability. */ }
         }
       } else {
         await document.exitFullscreen();
       }
-    } catch (error) {
-      readout.textContent = "TELA CHEIA INDISPONÍVEL NESTE NAVEGADOR";
+    } catch (_) {
+      status.textContent = "TELA CHEIA INDISPONÍVEL";
     }
   }
   fullscreenButton.addEventListener("click", enterFullscreen);
@@ -125,7 +124,30 @@
     fullscreenButton.setAttribute("aria-label", document.fullscreenElement ? "Sair da tela cheia" : "Ativar tela cheia");
   });
 
-  function drawPreview() {
+  async function loadWasm() {
+    try {
+      const response = await fetch("./nsmb-web.wasm", { cache: "no-cache" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const bytes = await response.arrayBuffer();
+      const result = await WebAssembly.instantiate(bytes, {});
+      const exports = result.instance.exports;
+      if (typeof exports.nsmb_web_abi_version !== "function" ||
+          typeof exports.nsmb_web_init !== "function" ||
+          typeof exports.nsmb_web_update !== "function") {
+        throw new Error("ABI do módulo não reconhecida");
+      }
+      if (exports.nsmb_web_abi_version() !== 1) throw new Error("Versão de ABI incompatível");
+      const initResult = exports.nsmb_web_init();
+      if (initResult !== 0) throw new Error(`Inicialização recusada (${initResult})`);
+      wasmExports = exports;
+      status.textContent = "WASM CARREGADO · ABI 1";
+    } catch (error) {
+      status.textContent = "WASM AINDA NÃO DISPONÍVEL";
+      console.info("[NSMB] Módulo WebAssembly não carregado:", error.message);
+    }
+  }
+
+  function drawPreview(timestamp) {
     const w = canvas.width, h = canvas.height;
     const sky = ctx.createLinearGradient(0, 0, 0, h);
     sky.addColorStop(0, "#426b91");
@@ -146,12 +168,20 @@
     ctx.fillRect(28, 28, 240, 38);
     ctx.fillStyle = "#fff";
     ctx.font = "bold 15px system-ui";
-    ctx.fillText("WEB RUNTIME: AGUARDANDO INTEGRAÇÃO", 42, 52);
+    ctx.fillText("WEB RUNTIME: " + (wasmExports ? "WASM CONECTADO" : "AGUARDANDO MÓDULO"), 42, 52);
     ctx.fillStyle = "rgba(255,255,255,.9)";
     ctx.font = "13px system-ui";
     ctx.fillText("Prévia técnica original · sem assets do jogo", 32, h-28);
+
+    if (wasmExports) {
+      const delta = previousFrame ? Math.min(timestamp - previousFrame, 100) : 0;
+      wasmExports.nsmb_web_update(delta, inputMask());
+    }
+    previousFrame = timestamp;
     requestAnimationFrame(drawPreview);
   }
+
   publishInput();
-  drawPreview();
+  loadWasm();
+  requestAnimationFrame(drawPreview);
 })();
