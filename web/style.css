@@ -1,0 +1,81 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0b1220;
+  color: #f5f7fb;
+  --panel: #121d30;
+  --line: rgba(255,255,255,.12);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: #0b1220; }
+body { min-height: 100vh; overflow-x: hidden; }
+button { font: inherit; }
+.app { min-height: 100vh; display: flex; flex-direction: column; padding: 18px clamp(12px, 3vw, 34px) calc(12px + var(--safe-bottom)); gap: 16px; }
+.topbar, .brand, .top-actions, .footer { display: flex; align-items: center; }
+.topbar { justify-content: space-between; gap: 12px; }
+.brand { gap: 11px; }
+.brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 11px; background: #f5c542; color: #142033; font-weight: 950; letter-spacing: -2px; }
+.brand strong { display: block; font-size: 14px; letter-spacing: .02em; }
+.brand small { display: block; margin-top: 3px; color: #91a1ba; font-size: 9px; letter-spacing: .16em; }
+.top-actions { gap: 12px; }
+.status { color: #f5c542; font-size: 10px; font-weight: 800; letter-spacing: .12em; }
+.icon-button { width: 42px; height: 38px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: white; font-size: 23px; cursor: pointer; }
+.game-layout { width: min(1200px, 100%); margin: auto; display: flex; flex-direction: column; gap: 14px; }
+.screen-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; min-height: 220px; overflow: hidden; border: 1px solid rgba(255,255,255,.18); border-radius: 18px; background: #15263a; box-shadow: 0 24px 70px rgba(0,0,0,.35); }
+canvas { display: block; width: 100%; height: 100%; }
+.screen-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; pointer-events: none; background: radial-gradient(ellipse at center, rgba(11,18,32,.18), rgba(11,18,32,.42)); }
+.eyebrow { color: #f5c542; font-size: 10px; font-weight: 900; letter-spacing: .2em; }
+.screen-overlay h1 { margin: 12px 0 5px; font-size: clamp(22px, 4vw, 42px); letter-spacing: -.04em; }
+.screen-overlay p { margin: 0; color: #d0d9e7; font-size: clamp(12px, 1.8vw, 16px); }
+.screen-hint { margin-top: 22px; color: #9eacc0; font-size: 11px; }
+.mobile-controls { display: none; justify-content: space-between; align-items: end; min-height: 150px; gap: 18px; user-select: none; -webkit-user-select: none; touch-action: none; }
+.left-controls { display: flex; align-items: end; gap: 14px; }
+.stick-area { width: 138px; height: 138px; display: grid; place-items: center; touch-action: none; }
+.stick-base { width: 116px; height: 116px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.22); border-radius: 50%; background: rgba(255,255,255,.08); box-shadow: inset 0 0 22px rgba(0,0,0,.22); }
+.stick-knob { width: 52px; height: 52px; border: 1px solid rgba(255,255,255,.32); border-radius: 50%; background: linear-gradient(145deg,#dce6f5,#8496b0); box-shadow: 0 5px 16px rgba(0,0,0,.35); transform: translate(0,0); }
+.shoulder-buttons { display: flex; gap: 8px; padding-bottom: 8px; }
+.right-controls { display: flex; flex-direction: column; align-items: end; gap: 5px; }
+.face-buttons { position: relative; width: 166px; height: 132px; }
+.control-button { display: grid; place-items: center; border: 1px solid rgba(255,255,255,.24); color: #fff; background: linear-gradient(145deg,#34445e,#1a2940); box-shadow: 0 5px 0 rgba(0,0,0,.28), inset 0 1px rgba(255,255,255,.15); font-weight: 900; touch-action: none; cursor: pointer; }
+.control-button:active, .control-button.pressed { filter: brightness(1.35); transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,.28); }
+.face { position: absolute; width: 54px; height: 54px; border-radius: 50%; font-size: 17px; }
+.face.x { top: 8px; left: 8px; }
+.face.y { top: 0; left: 65px; }
+.face.b { top: 66px; left: 65px; }
+.face.a { top: 48px; left: 120px; }
+.face.x, .face.y { background: linear-gradient(145deg,#50617d,#293b56); }
+.face.a, .face.b { background: linear-gradient(145deg,#d74d50,#8e2734); }
+.shoulder { width: 42px; height: 34px; border-radius: 10px; font-size: 13px; }
+.confirm { min-width: 82px; height: 28px; padding: 0 12px; border-radius: 9px; font-size: 9px; letter-spacing: .12em; }
+.footer { justify-content: space-between; gap: 10px; color: #8392a9; font-size: 10px; }
+#inputReadout { color: #f5c542; font-weight: 800; letter-spacing: .1em; }
+@media (pointer: coarse), (max-width: 800px) {
+  .app { padding-top: 12px; }
+  .mobile-controls { display: flex; }
+  .footer { font-size: 9px; }
+}
+@media (orientation: landscape) and (max-height: 600px) {
+  .app { min-height: 100dvh; padding: 8px 16px calc(8px + var(--safe-bottom)); gap: 7px; }
+  .topbar { min-height: 34px; }
+  .brand-mark { width: 30px; height: 30px; }
+  .game-layout { width: min(100%, 1180px); gap: 6px; }
+  .screen-frame { width: min(100%, calc((100dvh - 190px) * 16 / 9)); margin: 0 auto; min-height: 0; }
+  .mobile-controls { position: fixed; inset: auto 12px calc(8px + var(--safe-bottom)); min-height: 0; pointer-events: none; }
+  .left-controls, .right-controls { pointer-events: auto; }
+  .stick-area { width: 116px; height: 116px; }
+  .stick-base { width: 96px; height: 96px; }
+  .stick-knob { width: 44px; height: 44px; }
+  .face-buttons { transform: scale(.82); transform-origin: bottom right; margin-bottom: -18px; }
+  .shoulder { width: 36px; height: 30px; }
+  .footer { display: none; }
+}
+@media (max-width: 420px) and (orientation: portrait) {
+  .status { display: none; }
+  .screen-frame { min-height: 190px; }
+  .mobile-controls { min-height: 130px; }
+  .stick-area { width: 112px; height: 112px; }
+  .stick-base { width: 94px; height: 94px; }
+  .stick-knob { width: 44px; height: 44px; }
+  .face-buttons { transform: scale(.82); transform-origin: bottom right; margin-bottom: -18px; margin-right: -12px; }
+}

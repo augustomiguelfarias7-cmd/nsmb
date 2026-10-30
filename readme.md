@@ -1,6 +1,14 @@
 > [!CAUTION]
-> This project is currently in early stages and is unable to be compiled into a full rom at this time  
+> This project is currently in early stages and is unable to be compiled into a full rom at this time
 > If you would like to help develop this project read [contributing.md](contributing.md)
+
+# Browser port (experimental)
+
+An initial browser-facing scaffold is available in [web/](web/). It provides a responsive viewport, fullscreen support, best-effort landscape orientation locking, touch controls, and keyboard input.
+
+**This is not yet a playable browser build.** The original decompilation still requires its own build process and game-runtime integration. The web scaffold currently contains no ROM, extracted game assets, music, or original game levels.
+
+See [web/README.md](web/README.md) for the current input map and integration notes.
 
 # Supported releases
 
@@ -12,7 +20,7 @@
 | [New Super Mario Bros. (USA) (Demo) (Kiosk)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=x100)                     | A85E         | 2006-04-07 11:29:13 | None        |
 | [New Super Mario Bros. (Europe) (En,Fr,De,Es,It)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=0479)                | A2DP         | 2006-04-26 14:20:08 | None        |
 | [New Super Mario Bros. (Europe) (En,Fr,De,Es,It) (Demo) (Kiosk)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=x039) | A85P         | 2006-04-27 11:13:34 | None        |
-| [2006-Nen 10-Gatsu Taikenban Soft (Japan) (Demo) (Kiosk)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=z126)[^1]    | A85J_1[^2]   | 2006-09-01 20:30:18 | None        |
+| [2006-Nen 10-Gatsu Taikenban Soft (Japan) (Demo) (Kiosk)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=z126)[^1]    | A85J_1[^2]   | 2006-09-01 20:07:45 | None        |
 | [New Super Mario Bros. (Korea) ](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=0879)                                 | A2DK         | 2006-12-27 14:32:43 | None        |
 | [New Chaoji Maliou Xiongdi (China) (iDS)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=x142)                        | A2DC         | 2009-04-27 20:29:28 | None        |
 | [New Super Mario Bros. (Japan) (Demo) (Kiosk, Y7QJ)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=z393)             | Y7QJ[^3]     | 2009-10-23 16:23:25 | None        |
@@ -21,11 +29,11 @@
 [^2]: This NSMB ROM has the same Product Code as the standard JP demo, so "_1" is appended here
 [^3]: This build uses a 2.0 version of the mwcc compiler
 <!--
-This build is identical to A85P above but it also includes a autoboot flag 
+This build is identical to A85P above but it also includes a autoboot flag
 | [x168 - New Super Mario Bros. (Europe) (En,Fr,De,Es,It) (Demo) (Kiosk, Y78P)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=x168) | A85P         | None        | 2006-04-27 11:13:34 |
 
 These Wii U Virtual console releases seem to be idential to the builds above, however they have some extra data in the range 0x1000-0x3FFF.
 | [z434 - New Super Mario Bros. (Japan) (Wii U Virtual Console)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=z434)                   | WUP-N-DADJ   | None        | 2006-04-04 19:07:45 |
-| [z435 - New Super Mario Bros. (USA) (Wii U Virtual Console)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=z435)                     | WUP-N-DADE   | None        | 2006-03-29 09:48:19 |
-| [z436 - New Super Mario Bros. (Europe) (En,Fr,De,Es,It) (Wii U Virtual Console)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=z436) | WUP-N-DADP   | None        | 2006-04-26 14:20:08 |
+| [z435 - New Super Mario Bros. (USA) (Wii U Virtual Console)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=z435) | WUP-N-DADE   | None        | 2006-03-29 09:48:19 |
+| [z436 - New Super Mario Bros. (Europe) (Wii U Virtual Console)](https://datomatic.no-intro.org/index.php?page=show_record&s=28&n=z436) | WUP-N-DADP   | None        | 2006-04-26 14:20:08 |
 -->
